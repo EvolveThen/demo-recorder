@@ -1,0 +1,5 @@
+#!/bin/sh
+# demo-recorder — run the recorder from any directory.
+#   demo-recorder <scene.md> [--url https://your-app] [--audit]
+here="$(cd "$(dirname "$0")" && pwd)"
+exec "$here/node_modules/.bin/tsx" "$here/record.ts" "$@"

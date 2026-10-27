@@ -1,0 +1,23 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npx playwright install --with-deps chromium
+      - name: Smoke audit (full action run against a local page)
+        run: |
+          python3 -m http.server 8931 --directory examples/example-site &
+          sleep 1
+          npx tsx record.ts examples/example.scene.md --url http://localhost:8931 --audit
